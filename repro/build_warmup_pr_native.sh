@@ -51,4 +51,4 @@ CARGO_TARGET_DIR="${PWD}/${TARGET_DIR}" cargo build \
 mkdir -p "$(dirname "${BINARY}")"
 cp "${TARGET_DIR}/release/text-embeddings-router" "${BINARY}"
 chmod +x "${BINARY}"
-"${BINARY}" --help | rg --fixed-strings -- '--warmup-tokens'
+"${BINARY}" --help | grep --fixed-strings -- '--warmup-tokens'

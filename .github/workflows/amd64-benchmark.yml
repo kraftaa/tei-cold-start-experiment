@@ -43,6 +43,17 @@ jobs:
       - name: Install pinned baseline Rust toolchain
         run: rustup toolchain install 1.82.0 --profile minimal
 
+      - name: Cache Rust build inputs
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            .cache/build
+          key: ${{ runner.os }}-${{ runner.arch }}-tei-native-${{ hashFiles('repro/patches/*.patch', 'repro/build_*native.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-tei-native-
+
       - name: Build patched TEI 1.8 baseline natively
         run: ./repro/build_baseline_native.sh
 
