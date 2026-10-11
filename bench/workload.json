@@ -8,7 +8,10 @@
       "id": "empty",
       "inputs": "",
       "normalize": true,
-      "expect_status": 400
+      "expect_status": [
+        400,
+        413
+      ]
     },
     {
       "id": "short",

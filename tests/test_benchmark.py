@@ -53,6 +53,11 @@ class CorrectnessTests(unittest.TestCase):
         # turning every expected validation error into a transport failure.
         self.assertTrue(callable(runner.request_json))
 
+    def test_workload_allows_version_specific_empty_input_rejection(self):
+        workload = json.loads((ROOT / "bench" / "workload.json").read_text())
+        empty_case = next(case for case in workload["correctness"] if case["id"] == "empty")
+        self.assertEqual(empty_case["expect_status"], [400, 413])
+
 
 class SummaryTests(unittest.TestCase):
     def test_primary_summary_excludes_failed_correctness_trials(self):

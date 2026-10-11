@@ -485,18 +485,33 @@ def run_trial(
             expected_status = case.get("expect_status")
             payload = {key: value for key, value in case.items() if key not in {"id", "expect_status"}}
             if expected_status is not None:
+                expected_statuses = (
+                    [expected_status]
+                    if isinstance(expected_status, int)
+                    else expected_status
+                )
+                if (
+                    not isinstance(expected_statuses, list)
+                    or not expected_statuses
+                    or any(not isinstance(value, int) for value in expected_statuses)
+                ):
+                    raise ValueError(
+                        f"correctness case {case_id!r} has invalid expect_status: "
+                        f"{expected_status!r}"
+                    )
                 request_started = time.monotonic_ns()
                 status, response, _ = request_json(
                     "POST", base_url + config["request"]["path"], payload, timeout
                 )
                 elapsed = monotonic_ms(request_started)
-                if status != expected_status:
+                if status not in expected_statuses:
                     raise ValueError(
-                        f"correctness case {case_id!r} expected HTTP {expected_status}, received {status}"
+                        f"correctness case {case_id!r} expected HTTP "
+                        f"{expected_statuses}, received {status}"
                     )
                 correctness_results[case_id] = {
                     "request_ms": elapsed,
-                    "expected_status": expected_status,
+                    "expected_statuses": expected_statuses,
                     "actual_status": status,
                     "response": response,
                 }
