@@ -18,7 +18,7 @@ Phase 1 infrastructure is implemented:
 
 No comparable performance result is claimed yet. The development host is Apple Silicon, while the official TEI 1.8 CPU image is `linux/amd64`. Measurements under emulation do not reproduce the reported CPU environment.
 
-A manual GitHub Actions workflow is included for an exploratory native-AMD64 comparison. It builds the baseline and candidate on one `ubuntu-24.04` runner, executes correctness-gated trials, and uploads raw results and server logs even when an arm fails. GitHub-hosted runner hardware varies, so those numbers should be confirmed on a fixed CPU Spot instance before making a performance claim.
+A manual GitHub Actions workflow is included for an exploratory native-AMD64 comparison. It compiles the baseline and candidate as native processes on one `ubuntu-24.04` runner, executes correctness-gated trials, and uploads raw results and server logs even when an arm fails. Native execution avoids an expired Intel OneAPI repository certificate in TEI 1.8's historical Dockerfile. GitHub-hosted runner hardware varies, so those numbers should be confirmed in containers on a fixed CPU Spot instance before making a performance claim.
 
 Preliminary integration findings are nevertheless useful:
 
@@ -69,7 +69,7 @@ python3 bench/summarize.py <raw-results-path-printed-by-the-runner>
 
 Requirements: Linux x86-64, Docker, enough RAM for the model, and Python 3.11+. Do not use Rosetta/QEMU results as the headline comparison.
 
-For the hosted AMD64 experiment, open **Actions → AMD64 cold-start benchmark → Run workflow**. The default is 20 trials per arm. The workflow uses a locally built TEI 1.8 correctness baseline because the official image overrides `--max-batch-requests 1`; the exact queue-cap, `position_ids`, and build-lock patches are pinned in the baseline config. Download the workflow artifact for raw JSONL, environment metadata, summaries, and logs.
+For the hosted AMD64 experiment, open **Actions → AMD64 cold-start benchmark → Run workflow**. The default is 20 trials per arm. The workflow uses a locally built native TEI 1.8 correctness baseline because the official image overrides `--max-batch-requests 1`; the exact queue-cap, `position_ids`, and build-lock patches are pinned in the baseline config. Download the workflow artifact for raw JSONL, environment metadata, summaries, and logs.
 
 First prepare the warm local model cache. Network time is deliberately excluded from the main experiment:
 

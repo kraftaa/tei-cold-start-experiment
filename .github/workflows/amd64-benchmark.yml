@@ -27,7 +27,7 @@ jobs:
         run: |
           test "$(uname -m)" = "x86_64"
           uname -a
-          docker version
+          rustc --version
 
       - name: Run harness tests
         run: python3 -m unittest discover -s tests -v
@@ -40,11 +40,14 @@ jobs:
             --revision 5a8767404281704b871d7c0c081ab90807e91738 \
             --output .cache/models/qwen3-embedding-0.6b-onnx-int8
 
-      - name: Build patched TEI 1.8 baseline
-        run: ./repro/build_baseline.sh
+      - name: Install pinned baseline Rust toolchain
+        run: rustup toolchain install 1.82.0 --profile minimal
 
-      - name: Build warmup candidate
-        run: ./repro/build_warmup_pr.sh
+      - name: Build patched TEI 1.8 baseline natively
+        run: ./repro/build_baseline_native.sh
+
+      - name: Build warmup candidate natively
+        run: ./repro/build_warmup_pr_native.sh
 
       - name: Run benchmark
         id: benchmark

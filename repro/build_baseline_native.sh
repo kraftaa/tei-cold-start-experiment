@@ -47,6 +47,9 @@ fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
   export PKG_CONFIG_LIBDIR=/nonexistent
+  readonly FEATURES="ort,http"
+else
+  readonly FEATURES="ort,http,static-linking"
 fi
 
 # TEI 1.8's pinned metrics 0.23.0 no longer compiles under Rust 1.98;
@@ -56,7 +59,7 @@ CARGO_TARGET_DIR="${PWD}/${TARGET_DIR}" rustup run 1.82.0 cargo build \
   --release \
   --bin text-embeddings-router \
   --no-default-features \
-  --features ort,http
+  --features "${FEATURES}"
 
 mkdir -p "$(dirname "${BINARY}")"
 cp "${TARGET_DIR}/release/text-embeddings-router" "${BINARY}"

@@ -22,23 +22,24 @@
     "tei_pr": "huggingface/text-embeddings-inference#884",
     "tei_commit": "5806bdc99f11ad490cd7e38c1f4dd757034c0adb",
     "local_correctness_patch_sha256": "c27f2b47dd7a730e0eae80a45eac4a1eaf6d2166af60a3fd6523b61dc93fb4a3",
+    "execution": "native linux/amd64 process",
     "model_id": "Svenni551/Qwen3-Embedding-0.6B-ONNX-INT8",
     "model_revision": "5a8767404281704b871d7c0c081ab90807e91738",
     "warmup_tokens": 0
   },
   "launcher": {
-    "type": "docker",
-    "platform": "linux/amd64",
-    "image": "tei-warmup-pr:5806bdc",
-    "container_port": 80,
-    "model_path": ".cache/models/qwen3-embedding-0.6b-onnx-int8",
+    "type": "process",
+    "cwd": ".",
     "environment": { "HF_HUB_OFFLINE": "1" },
-    "server_args": [
+    "command": [
+      "{root}/.cache/bin/tei-warmup-pr-5806bdc",
+      "--model-id", "{root}/.cache/models/qwen3-embedding-0.6b-onnx-int8",
       "--pooling", "mean",
       "--auto-truncate",
       "--max-batch-tokens", "1024",
       "--max-batch-requests", "1",
-      "--warmup-tokens", "0"
+      "--warmup-tokens", "0",
+      "--port", "{port}"
     ]
   }
 }
