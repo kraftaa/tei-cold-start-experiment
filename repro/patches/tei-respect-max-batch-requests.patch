@@ -1,0 +1,36 @@
+diff --git a/router/src/lib.rs b/router/src/lib.rs
+index a2ca801..57092ed 100644
+--- a/router/src/lib.rs
++++ b/router/src/lib.rs
+@@ -299,13 +299,24 @@ pub async fn run(
+         .await
+         .context("Model backend is not healthy")?;
+ 
+-    let max_batch_requests = backend
+-        .max_batch_size
+-        .inspect(|&s| {
+-            tracing::warn!("Backend does not support a batch size > {s}");
+-            tracing::warn!("forcing `max_batch_requests={s}`");
+-        })
+-        .or(max_batch_requests);
++    // A backend batch-size limit is a ceiling, not a replacement for a
++    // stricter user limit. Overwriting `--max-batch-requests=1` here made it
++    // impossible to serialize inference for ONNX exports that are not
++    // batch-correct.
++    let max_batch_requests = match (max_batch_requests, backend.max_batch_size) {
++        (Some(requested), Some(supported)) if requested > supported => {
++            tracing::warn!("Backend does not support a batch size > {supported}");
++            tracing::warn!("reducing `max_batch_requests` from {requested} to {supported}");
++            Some(supported)
++        }
++        (Some(requested), _) => Some(requested),
++        (None, Some(supported)) => {
++            tracing::warn!("Backend does not support a batch size > {supported}");
++            tracing::warn!("setting `max_batch_requests={supported}`");
++            Some(supported)
++        }
++        (None, None) => None,
++    };
+ 
+     // Queue logic
+     let queue = Queue::new(

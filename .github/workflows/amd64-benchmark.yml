@@ -1,0 +1,83 @@
+name: AMD64 cold-start benchmark
+
+on:
+  workflow_dispatch:
+    inputs:
+      trials:
+        description: Trials per benchmark arm
+        required: true
+        default: "20"
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: amd64-cold-start-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify runner architecture
+        run: |
+          test "$(uname -m)" = "x86_64"
+          uname -a
+          docker version
+
+      - name: Run harness tests
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Prepare pinned model snapshot
+        run: |
+          git lfs install
+          python3 repro/prepare_model.py \
+            --model-id Svenni551/Qwen3-Embedding-0.6B-ONNX-INT8 \
+            --revision 5a8767404281704b871d7c0c081ab90807e91738 \
+            --output .cache/models/qwen3-embedding-0.6b-onnx-int8
+
+      - name: Build patched TEI 1.8 baseline
+        run: ./repro/build_baseline.sh
+
+      - name: Build warmup candidate
+        run: ./repro/build_warmup_pr.sh
+
+      - name: Run benchmark
+        id: benchmark
+        continue-on-error: true
+        run: ./repro/run_amd64_ci.sh "${{ inputs.trials }}"
+
+      - name: Publish summaries in job report
+        if: always()
+        run: |
+          {
+            echo "## AMD64 cold-start benchmark"
+            echo
+            echo "GitHub-hosted runners are variable shared hardware; treat these results as exploratory."
+            for summary in results/ci/summary/*.md; do
+              if [[ -f "${summary}" ]]; then
+                echo
+                echo "### $(basename "${summary}" .md)"
+                cat "${summary}"
+              fi
+            done
+          } >> "${GITHUB_STEP_SUMMARY}"
+
+      - name: Upload benchmark evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: amd64-cold-start-${{ github.run_id }}
+          path: |
+            results/ci/
+            results/logs/
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Enforce benchmark status
+        if: steps.benchmark.outcome != 'success'
+        run: exit 1

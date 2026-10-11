@@ -1,0 +1,119 @@
+{
+  "all_observed_metrics_ms_diagnostic_only": {
+    "first_request_ms": {
+      "count": 19,
+      "max": 110.914292,
+      "median": 64.578167,
+      "min": 35.496959,
+      "p90": 97.2249172
+    },
+    "launch_command_ms": {
+      "count": 20,
+      "max": 4.08225,
+      "median": 2.7813125,
+      "min": 2.404333,
+      "p90": 3.4825462000000003
+    },
+    "launch_to_first_correct_ms": {
+      "count": 19,
+      "max": 3850.201084,
+      "median": 1911.488625,
+      "min": 1732.447625,
+      "p90": 2699.811658
+    },
+    "launch_to_health_ms": {
+      "count": 19,
+      "max": 3747.219917,
+      "median": 1844.870417,
+      "min": 1673.008542,
+      "p90": 2644.1532664
+    },
+    "second_request_ms": {
+      "count": 19,
+      "max": 133.978916,
+      "median": 54.6205,
+      "min": 33.501333,
+      "p90": 79.85215
+    }
+  },
+  "experiment": "tei-warmup-pr-zero-native-smoke",
+  "failure_messages": [
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "server exited before the health endpoint became ready",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]",
+    "cosine similarity below 0.9999: [0.9414490686584128, 0.9650385014218809]"
+  ],
+  "failures": 16,
+  "host_fingerprints": [
+    "{\"machine\": \"arm64\", \"python\": \"3.14.7\", \"release\": \"25.6.0\", \"system\": \"Darwin\"}"
+  ],
+  "metrics_ms": {
+    "first_request_ms": {
+      "count": 4,
+      "max": 78.281042,
+      "median": 64.260292,
+      "min": 40.857667,
+      "p90": 75.03510440000001
+    },
+    "launch_command_ms": {
+      "count": 4,
+      "max": 3.331667,
+      "median": 3.002021,
+      "min": 2.788791,
+      "p90": 3.2428295
+    },
+    "launch_to_first_correct_ms": {
+      "count": 4,
+      "max": 2731.005458,
+      "median": 1938.269479,
+      "min": 1787.560375,
+      "p90": 2508.3601205000004
+    },
+    "launch_to_health_ms": {
+      "count": 4,
+      "max": 2663.27,
+      "median": 1886.219292,
+      "min": 1709.072792,
+      "p90": 2442.5594501
+    },
+    "second_request_ms": {
+      "count": 4,
+      "max": 65.449417,
+      "median": 48.906020999999996,
+      "min": 37.574166,
+      "p90": 61.234417
+    }
+  },
+  "resources": {
+    "approx_peak_memory_bytes": null,
+    "max_sampled_cpu_percent": null
+  },
+  "run_id": "535dc427-cfde-45ec-94de-2191b033087c",
+  "schema_version": 1,
+  "steady_request_ms": {
+    "count": 20,
+    "p50": 43.176249999999996,
+    "p95": 75.15466105
+  },
+  "successes": 4,
+  "throughput_requests_per_second": {
+    "count": 4,
+    "max": 30.328365240790404,
+    "median": 28.785029317846433,
+    "min": 21.565277961606796,
+    "p90": 30.172522003484787
+  },
+  "trials": 20
+}

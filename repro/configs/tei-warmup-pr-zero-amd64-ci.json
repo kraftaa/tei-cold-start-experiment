@@ -1,0 +1,44 @@
+{
+  "name": "tei-warmup-pr-zero-amd64-ci",
+  "workload": "bench/workload.json",
+  "host_port": null,
+  "health_path": "/health",
+  "health_poll_interval_ms": 50,
+  "timeout_seconds": 600,
+  "steady_requests": 20,
+  "throughput_concurrency": 4,
+  "throughput_requests": 40,
+  "request": { "path": "/embed" },
+  "correctness": {
+    "expected_dimension": 1024,
+    "require_unit_norm": true,
+    "norm_tolerance": 0.001,
+    "cosine_threshold": 0.9999,
+    "reference_experiment": "tei-v1.8.0-cpu-int8-correctness",
+    "reference_path": "results/ci/references/tei-v1.8.0-cpu-int8-correctness.json"
+  },
+  "pins": {
+    "purpose": "exploratory GitHub-hosted linux/amd64 comparison",
+    "tei_pr": "huggingface/text-embeddings-inference#884",
+    "tei_commit": "5806bdc99f11ad490cd7e38c1f4dd757034c0adb",
+    "local_correctness_patch_sha256": "c27f2b47dd7a730e0eae80a45eac4a1eaf6d2166af60a3fd6523b61dc93fb4a3",
+    "model_id": "Svenni551/Qwen3-Embedding-0.6B-ONNX-INT8",
+    "model_revision": "5a8767404281704b871d7c0c081ab90807e91738",
+    "warmup_tokens": 0
+  },
+  "launcher": {
+    "type": "docker",
+    "platform": "linux/amd64",
+    "image": "tei-warmup-pr:5806bdc",
+    "container_port": 80,
+    "model_path": ".cache/models/qwen3-embedding-0.6b-onnx-int8",
+    "environment": { "HF_HUB_OFFLINE": "1" },
+    "server_args": [
+      "--pooling", "mean",
+      "--auto-truncate",
+      "--max-batch-tokens", "1024",
+      "--max-batch-requests", "1",
+      "--warmup-tokens", "0"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+.cache/
+__pycache__/
+*.py[cod]
+.DS_Store
+.venv/
+results/logs/
+results/ci/
+results/raw/fake-*.jsonl
+results/raw/*-reference-capture.jsonl
+results/raw/tei-v1.8.0-cpu-int8-emulated-smoke.jsonl
+results/references/fake-*.json
+results/summary/fake-*.json
+results/summary/fake-*.md

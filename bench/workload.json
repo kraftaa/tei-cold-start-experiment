@@ -1,0 +1,32 @@
+{
+  "startup": {
+    "inputs": "What is deep learning?",
+    "normalize": true
+  },
+  "correctness": [
+    {
+      "id": "empty",
+      "inputs": "",
+      "normalize": true,
+      "expect_status": 400
+    },
+    {
+      "id": "short",
+      "inputs": "Cold starts should be measured through the first useful result.",
+      "normalize": true
+    },
+    {
+      "id": "long",
+      "inputs": "Embedding servers transform text into numerical vectors. This repeated paragraph provides a stable, moderately long input for correctness checks. Embedding servers transform text into numerical vectors. This repeated paragraph provides a stable, moderately long input for correctness checks. Embedding servers transform text into numerical vectors. This repeated paragraph provides a stable, moderately long input for correctness checks. Embedding servers transform text into numerical vectors. This repeated paragraph provides a stable, moderately long input for correctness checks.",
+      "normalize": true
+    },
+    {
+      "id": "batch",
+      "inputs": [
+        "First batch member.",
+        "Second batch member has different content."
+      ],
+      "normalize": true
+    }
+  ]
+}

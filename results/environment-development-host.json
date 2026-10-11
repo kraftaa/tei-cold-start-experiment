@@ -1,0 +1,27 @@
+{
+  "captured_at_utc": "2026-10-10T22:50:44Z",
+  "cpu_model_linux": null,
+  "cpu_model_macos": "Apple M1 Pro",
+  "docker_info": {
+    "architecture": "aarch64",
+    "cpus": 2,
+    "memory_bytes": 4095434752,
+    "operating_system": "Ubuntu 24.04.1 LTS",
+    "server_version": "27.4.0"
+  },
+  "kernel": {
+    "release": "25.6.0",
+    "system": "Darwin",
+    "version": "Darwin Kernel Version 25.6.0: Tue Aug 18 17:49:13 PDT 2026; root:xnu-12377.161.15.700.19~2/RELEASE_ARM64_T6000"
+  },
+  "logical_cpu_count": 10,
+  "machine": "arm64",
+  "memory_bytes_macos": "34359738368",
+  "platform": "macOS-26.7-arm64-arm-64bit-Mach-O",
+  "processor": "arm",
+  "thread_environment": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "RAYON_NUM_THREADS": null
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "name": "fake-process",
+  "workload": "bench/workload.json",
+  "host_port": null,
+  "health_path": "/health",
+  "health_poll_interval_ms": 10,
+  "timeout_seconds": 10,
+  "steady_requests": 5,
+  "throughput_concurrency": 2,
+  "throughput_requests": 8,
+  "request": {
+    "path": "/embed"
+  },
+  "correctness": {
+    "expected_dimension": 4,
+    "require_unit_norm": true,
+    "norm_tolerance": 0.000001,
+    "cosine_threshold": 0.999999,
+    "reference_experiment": "fake-process",
+    "allow_reference_capture": true,
+    "reference_path": "results/references/fake-process.json"
+  },
+  "launcher": {
+    "type": "process",
+    "cwd": ".",
+    "command": [
+      "python3",
+      "tests/fake_server.py",
+      "--port",
+      "{port}",
+      "--startup-delay-ms",
+      "25"
+    ]
+  }
+}

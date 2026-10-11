@@ -1,0 +1,102 @@
+{
+  "all_observed_metrics_ms_diagnostic_only": {
+    "first_request_ms": {
+      "count": 20,
+      "max": 87.9105,
+      "median": 48.447458499999996,
+      "min": 33.5135,
+      "p90": 67.07029580000003
+    },
+    "launch_command_ms": {
+      "count": 20,
+      "max": 3.441625,
+      "median": 2.6317505,
+      "min": 2.370334,
+      "p90": 3.0941955000000005
+    },
+    "launch_to_first_correct_ms": {
+      "count": 20,
+      "max": 2092.027333,
+      "median": 1714.3105415,
+      "min": 1495.795458,
+      "p90": 1788.9303878
+    },
+    "launch_to_health_ms": {
+      "count": 20,
+      "max": 2006.686625,
+      "median": 1662.1818954999999,
+      "min": 1453.054833,
+      "p90": 1730.4545706000001
+    },
+    "second_request_ms": {
+      "count": 20,
+      "max": 65.435042,
+      "median": 44.7036665,
+      "min": 32.703416,
+      "p90": 61.86471220000001
+    }
+  },
+  "experiment": "tei-warmup-pr-zero-native-smoke",
+  "failure_messages": [],
+  "failures": 0,
+  "host_fingerprints": [
+    "{\"machine\": \"arm64\", \"python\": \"3.14.7\", \"release\": \"25.6.0\", \"system\": \"Darwin\"}"
+  ],
+  "metrics_ms": {
+    "first_request_ms": {
+      "count": 20,
+      "max": 87.9105,
+      "median": 48.447458499999996,
+      "min": 33.5135,
+      "p90": 67.07029580000003
+    },
+    "launch_command_ms": {
+      "count": 20,
+      "max": 3.441625,
+      "median": 2.6317505,
+      "min": 2.370334,
+      "p90": 3.0941955000000005
+    },
+    "launch_to_first_correct_ms": {
+      "count": 20,
+      "max": 2092.027333,
+      "median": 1714.3105415,
+      "min": 1495.795458,
+      "p90": 1788.9303878
+    },
+    "launch_to_health_ms": {
+      "count": 20,
+      "max": 2006.686625,
+      "median": 1662.1818954999999,
+      "min": 1453.054833,
+      "p90": 1730.4545706000001
+    },
+    "second_request_ms": {
+      "count": 20,
+      "max": 65.435042,
+      "median": 44.7036665,
+      "min": 32.703416,
+      "p90": 61.86471220000001
+    }
+  },
+  "resources": {
+    "approx_peak_memory_bytes": null,
+    "max_sampled_cpu_percent": null
+  },
+  "run_id": "82d60db4-d498-40c8-8f3d-79ca931d10b8",
+  "schema_version": 1,
+  "steady_request_ms": {
+    "count": 100,
+    "p50": 41.876833500000004,
+    "p95": 63.0286274
+  },
+  "successes": 20,
+  "throughput_requests_per_second": {
+    "count": 20,
+    "max": 27.120088952590002,
+    "median": 23.08142650317195,
+    "min": 17.048793479006303,
+    "p90": 25.747358728371264
+  },
+  "trials": 20
+}

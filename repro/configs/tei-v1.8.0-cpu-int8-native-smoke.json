@@ -1,0 +1,51 @@
+{
+  "name": "tei-v1.8.0-cpu-int8-native-smoke",
+  "workload": "bench/workload.json",
+  "host_port": null,
+  "health_path": "/health",
+  "health_poll_interval_ms": 25,
+  "timeout_seconds": 600,
+  "steady_requests": 5,
+  "throughput_concurrency": 4,
+  "throughput_requests": 20,
+  "request": {
+    "path": "/embed"
+  },
+  "correctness": {
+    "expected_dimension": 1024,
+    "require_unit_norm": true,
+    "norm_tolerance": 0.001,
+    "cosine_threshold": 0.9999,
+    "reference_experiment": "tei-warmup-pr-zero-native-smoke",
+    "reference_path": "results/references/tei-warmup-pr-zero-native-smoke.json"
+  },
+  "pins": {
+    "purpose": "native ARM comparison baseline",
+    "tei_tag": "v1.8.0",
+    "tei_commit": "2bff275313a7b93e9a5d4dc1dbfdce8e72c7d820",
+    "local_correctness_patch": "repro/patches/tei-v1.8-respect-max-batch-requests.patch",
+    "local_correctness_patch_sha256": "1025f570a876cd922dfc704abe011b6ebd7ee53295da700b1c6f5f2a9d9f76a9",
+    "position_ids_patch_sha256": "bddd750379c86e551c69f8308928f29369c8a8f5dd0c680296e1da1dc6bb27f7",
+    "metrics_compatibility_patch_sha256": "4c75bbb0b42d7b022d52bc40ac944cbd988e2349b274be80321171dd5a314a6b",
+    "model_id": "Svenni551/Qwen3-Embedding-0.6B-ONNX-INT8",
+    "model_revision": "5a8767404281704b871d7c0c081ab90807e91738"
+  },
+  "launcher": {
+    "type": "process",
+    "cwd": ".",
+    "command": [
+      "{root}/.cache/bin/tei-v1.8.0-2bff275-batchcap",
+      "--model-id",
+      "{root}/.cache/models/qwen3-embedding-0.6b-onnx-int8",
+      "--pooling",
+      "mean",
+      "--auto-truncate",
+      "--max-batch-tokens",
+      "1024",
+      "--max-batch-requests",
+      "1",
+      "--port",
+      "{port}"
+    ]
+  }
+}

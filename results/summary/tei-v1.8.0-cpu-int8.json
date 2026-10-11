@@ -1,0 +1,47 @@
+{
+  "experiment": "tei-v1.8.0-cpu-int8",
+  "failure_messages": [
+    "health endpoint did not become ready: http://127.0.0.1:54322/health"
+  ],
+  "failures": 1,
+  "host_fingerprints": [
+    "{\"machine\": \"arm64\", \"python\": \"3.14.7\", \"release\": \"25.6.0\", \"system\": \"Darwin\"}"
+  ],
+  "metrics_ms": {
+    "first_request_ms": null,
+    "launch_command_ms": {
+      "count": 1,
+      "max": 340.404709,
+      "median": 340.404709,
+      "min": 340.404709,
+      "p90": 340.404709
+    },
+    "launch_to_first_correct_ms": null,
+    "launch_to_health_ms": null,
+    "second_request_ms": null
+  },
+  "resources": {
+    "approx_peak_memory_bytes": {
+      "count": 1,
+      "max": 1597727834.0,
+      "median": 1597727834.0,
+      "min": 1597727834.0,
+      "p90": 1597727834.0
+    },
+    "max_sampled_cpu_percent": {
+      "count": 1,
+      "max": 258.52,
+      "median": 258.52,
+      "min": 258.52,
+      "p90": 258.52
+    }
+  },
+  "schema_version": 1,
+  "steady_request_ms": {
+    "count": 0,
+    "p50": null,
+    "p95": null
+  },
+  "successes": 0,
+  "trials": 1
+}

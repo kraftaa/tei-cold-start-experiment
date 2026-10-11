@@ -1,0 +1,73 @@
+diff --git a/backends/ort/src/lib.rs b/backends/ort/src/lib.rs
+index add5b33..0a8e5af 100644
+--- a/backends/ort/src/lib.rs
++++ b/backends/ort/src/lib.rs
+@@ -12,6 +12,7 @@ pub struct OrtBackend {
+     session: Session,
+     pool: Pool,
+     type_id_name: Option<String>,
++    position_ids: bool,
+ }
+ 
+ impl OrtBackend {
+@@ -61,10 +62,12 @@ impl OrtBackend {
+ 
+         // Check if the model requires type tokens
+         let mut type_id_name = None;
++        let mut position_ids = false;
+         for input in &session.inputs {
+             if &input.name == "token_type_ids" || &input.name == "input_type" {
+                 type_id_name = Some(input.name.clone());
+-                break;
++            } else if &input.name == "position_ids" {
++                position_ids = true;
+             }
+         }
+ 
+@@ -72,6 +75,7 @@ impl OrtBackend {
+             session,
+             pool,
+             type_id_name,
++            position_ids,
+         })
+     }
+ }
+@@ -149,16 +153,35 @@ impl Backend for OrtBackend {
+         let attention_mask =
+             ndarray::Array2::from_shape_vec((batch_size, max_length), attention_mask).e()?;
+         let input_lengths = ndarray::Array1::from_vec(input_lengths);
++        let position_ids = if self.position_ids {
++            let values = (0..batch_size)
++                .flat_map(|_| 0..max_length as i64)
++                .collect::<Vec<_>>();
++            Some(ndarray::Array2::from_shape_vec(
++                (batch_size, max_length),
++                values,
++            ).e()?)
++        } else {
++            None
++        };
+ 
+         // Create onnx inputs
+-        let inputs = match self.type_id_name.as_ref() {
+-            Some(type_id_name) => {
++        let inputs = match (self.type_id_name.as_ref(), position_ids) {
++            (Some(type_id_name), Some(position_ids)) => {
++                let type_ids =
++                    ndarray::Array2::from_shape_vec((batch_size, max_length), type_ids).e()?;
++                ort::inputs!["input_ids" => input_ids, "attention_mask" => attention_mask.clone(), type_id_name => type_ids, "position_ids" => position_ids].e()?
++            }
++            (Some(type_id_name), None) => {
+                 // Add type ids to inputs
+                 let type_ids =
+                     ndarray::Array2::from_shape_vec((batch_size, max_length), type_ids).e()?;
+                 ort::inputs!["input_ids" => input_ids, "attention_mask" => attention_mask.clone(), type_id_name => type_ids].e()?
+             }
+-            None => {
++            (None, Some(position_ids)) => {
++                ort::inputs!["input_ids" => input_ids, "attention_mask" => attention_mask.clone(), "position_ids" => position_ids].e()?
++            }
++            (None, None) => {
+                 ort::inputs!["input_ids" => input_ids, "attention_mask" => attention_mask.clone()]
+                     .e()?
+             }
