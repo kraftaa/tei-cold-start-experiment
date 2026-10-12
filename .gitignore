@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .DS_Store
 .venv/
+docs/RESULTS_EXPLAINED_LOCAL.md
 results/logs/
 results/ci/
 results/raw/fake-*.jsonl
