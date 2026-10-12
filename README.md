@@ -69,7 +69,7 @@ python3 bench/summarize.py <raw-results-path-printed-by-the-runner>
 
 Requirements: Linux x86-64, Docker, enough RAM for the model, and Python 3.11+. Do not use Rosetta/QEMU results as the headline comparison.
 
-For the hosted AMD64 experiment, open **Actions → AMD64 cold-start benchmark → Run workflow**. The default is 20 trials per arm. The workflow uses a locally built native TEI 1.8 correctness baseline because the official image overrides `--max-batch-requests 1`; the exact queue-cap, `position_ids`, and build-lock patches are pinned in the baseline config. Download the workflow artifact for raw JSONL, environment metadata, summaries, and logs.
+For the hosted AMD64 experiment, open **Actions → AMD64 cold-start benchmark → Run workflow**. The default is 20 trials per arm. The four arms are patched TEI 1.8, the warmup PR with its default warmup, the same PR with a 64-token warmup, and the same PR with zero warmup. The same-binary default arm isolates the effect of the warmup setting from unrelated changes between TEI versions. The workflow uses a locally built native TEI 1.8 correctness baseline because the official image overrides `--max-batch-requests 1`; the exact queue-cap, `position_ids`, and build-lock patches are pinned in the baseline config. Download the workflow artifact for raw JSONL, environment metadata, summaries, and logs.
 
 First prepare the warm local model cache. Network time is deliberately excluded from the main experiment:
 

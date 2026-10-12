@@ -39,6 +39,9 @@ if [[ -f results/ci/references/tei-v1.8.0-cpu-int8-correctness.json ]]; then
     repro/configs/tei-v1.8.0-cpu-int8-correctness.json \
     results/ci/raw/baseline.jsonl
   run_case \
+    repro/configs/tei-warmup-pr-default-amd64-ci.json \
+    results/ci/raw/candidate-default.jsonl
+  run_case \
     repro/configs/tei-warmup-pr-zero-amd64-ci.json \
     results/ci/raw/candidate-zero.jsonl
   run_case \

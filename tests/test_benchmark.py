@@ -58,6 +58,21 @@ class CorrectnessTests(unittest.TestCase):
         empty_case = next(case for case in workload["correctness"] if case["id"] == "empty")
         self.assertEqual(empty_case["expect_status"], [400, 413])
 
+    def test_amd64_default_control_uses_same_candidate_binary(self):
+        config_dir = ROOT / "repro" / "configs"
+        default = json.loads(
+            (config_dir / "tei-warmup-pr-default-amd64-ci.json").read_text()
+        )
+        zero = json.loads(
+            (config_dir / "tei-warmup-pr-zero-amd64-ci.json").read_text()
+        )
+        default_command = default["launcher"]["command"]
+        zero_command = zero["launcher"]["command"]
+        self.assertEqual(default_command[0], zero_command[0])
+        warmup_index = zero_command.index("--warmup-tokens")
+        del zero_command[warmup_index : warmup_index + 2]
+        self.assertEqual(default_command, zero_command)
+
 
 class SummaryTests(unittest.TestCase):
     def test_primary_summary_excludes_failed_correctness_trials(self):
