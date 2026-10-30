@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
+<rect width="1200" height="675" fill="#FFFFFF"/>
+<g font-family="Arial, Helvetica, sans-serif">
+<text x="70" y="53" fill="#171717" font-size="30" font-weight="700">TEI cold start: time to first correct embedding</text>
+<text x="70" y="88" fill="#525252" font-size="17">20 fresh-process trials per configuration · native AMD64 · 80/80 trials passed the correctness suite</text>
+<line x1="90" y1="520.0" x2="1160" y2="520.0" stroke="#E5E5E5" stroke-width="1"/>
+<text x="74" y="525.0" fill="#525252" font-size="15" text-anchor="end">0</text>
+<line x1="90" y1="434.4" x2="1160" y2="434.4" stroke="#E5E5E5" stroke-width="1"/>
+<text x="74" y="439.44444444444446" fill="#525252" font-size="15" text-anchor="end">2</text>
+<line x1="90" y1="348.9" x2="1160" y2="348.9" stroke="#E5E5E5" stroke-width="1"/>
+<text x="74" y="353.8888888888889" fill="#525252" font-size="15" text-anchor="end">4</text>
+<line x1="90" y1="263.3" x2="1160" y2="263.3" stroke="#E5E5E5" stroke-width="1"/>
+<text x="74" y="268.33333333333337" fill="#525252" font-size="15" text-anchor="end">6</text>
+<line x1="90" y1="177.8" x2="1160" y2="177.8" stroke="#E5E5E5" stroke-width="1"/>
+<text x="74" y="182.77777777777777" fill="#525252" font-size="15" text-anchor="end">8</text>
+<line x1="90" y1="520" x2="1160" y2="520" stroke="#A3A3A3" stroke-width="1.5"/>
+<text x="27" y="350" fill="#262626" font-size="16" transform="rotate(-90 27 350)" text-anchor="middle">Seconds</text>
+<rect x="145" y="178.1" width="170" height="341.9" fill="#737373"/>
+<text x="230.0" y="166.0772222222222" fill="#171717" font-size="18" font-weight="700" text-anchor="middle">7.993s</text>
+<text x="230.0" y="553" fill="#262626" font-size="16" text-anchor="middle">Patched TEI 1.8</text>
+<text x="230.0" y="576" fill="#262626" font-size="16" text-anchor="middle">baseline</text>
+<rect x="405" y="194.2" width="170" height="325.8" fill="#A3A3A3"/>
+<text x="490.0" y="182.20444444444445" fill="#171717" font-size="18" font-weight="700" text-anchor="middle">7.616s</text>
+<text x="490.0" y="553" fill="#262626" font-size="16" text-anchor="middle">Candidate</text>
+<text x="490.0" y="576" fill="#262626" font-size="16" text-anchor="middle">default warmup</text>
+<rect x="665" y="416.9" width="170" height="103.1" fill="#2563EB"/>
+<text x="750.0" y="404.90555555555557" fill="#171717" font-size="18" font-weight="700" text-anchor="middle">2.410s</text>
+<text x="750.0" y="553" fill="#262626" font-size="16" text-anchor="middle">Candidate</text>
+<text x="750.0" y="576" fill="#262626" font-size="16" text-anchor="middle">64-token warmup</text>
+<rect x="925" y="430.0" width="170" height="90.0" fill="#16A34A"/>
+<text x="1010.0" y="417.99555555555554" fill="#171717" font-size="18" font-weight="700" text-anchor="middle">2.104s</text>
+<text x="1010.0" y="553" fill="#262626" font-size="16" text-anchor="middle">Candidate</text>
+<text x="1010.0" y="576" fill="#262626" font-size="16" text-anchor="middle">zero warmup</text>
+<path d="M 490.0 138 V 128 H 1010.0 V 138" fill="none" stroke="#404040" stroke-width="1.5"/>
+<text x="750.0" y="119" fill="#171717" font-size="19" font-weight="700" text-anchor="middle">−72.37%</text>
+<text x="70" y="642" fill="#737373" font-size="13">Same candidate binary for default, 64-token, and zero-warmup arms. Cached model. GitHub-hosted AMD EPYC 7763 runner. Production-container validation remains.</text>
+</g>
+</svg>

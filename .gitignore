@@ -4,6 +4,7 @@ __pycache__/
 .DS_Store
 .venv/
 docs/RESULTS_EXPLAINED_LOCAL.md
+docs/LINKEDIN_POST_LOCAL.md
 results/logs/
 results/ci/
 results/raw/fake-*.jsonl

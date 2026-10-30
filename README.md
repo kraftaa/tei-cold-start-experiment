@@ -15,13 +15,17 @@ All four configurations used the same model, host, settings, and correctness ref
 | Same candidate, 64-token warmup | 2.41 s | 2.67 s | 20/20 | 33.72 ms | 29.75 req/s |
 | Same candidate, no warmup | **2.10 s** | **2.41 s** | 20/20 | 33.79 ms | 29.97 req/s |
 
-No-warmup was **72.37% faster** than the identical candidate binary using its default warmup. The 64-token option was **68.36% faster**. All 80 measured trials passed the full correctness suite.
+No-warmup was **72.37% faster** than the identical candidate binary using its default warmup. The 64-token option was **68.36% faster**. All 80/80 measured trials passed the full correctness suite.
+
+![TEI cold-start comparison showing median time to the first correct embedding](docs/assets/tei-cold-start-amd64.png)
 
 This passes the project's 25% improvement threshold, so the decision is **GO for validation on the intended production Spot instance**. It does not justify building a replacement embedding server: the useful change is a focused TEI warmup option.
 
-## What was measured
+## Why `/health` is not the finish line
 
 The primary metric is `launch_to_first_correct_ms`: time from launching TEI until the first embedding is returned and verified. A fast `/health` response alone does not count.
+
+Every trial used a fresh server process so application memory could not carry over from the previous trial. The model files stayed in the operating system's file cache, matching a machine that already has its model downloaded.
 
 Every timed trial checked that the embedding:
 
@@ -32,7 +36,7 @@ Every timed trial checked that the embedding:
 
 Only correct trials were included in the performance statistics. The harness also measured health time, first and second request latency, steady-state latency, and concurrent throughput.
 
-## Why four configurations?
+## Why the same-binary comparison matters
 
 The patched TEI 1.8 arm represents the older baseline. The other three arms use the **same candidate binary**, changing only warmup size. Its default-warmup arm is the control: comparing it with 64 and zero tokens isolates warmup from unrelated version or build changes.
 
