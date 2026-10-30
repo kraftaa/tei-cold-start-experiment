@@ -1,50 +1,71 @@
 # Decision record
 
-## Current decision: correctness fixed locally; no performance GO yet
+## Current decision: GO for production validation; do not build a replacement server
 
-Do not build a replacement server yet.
+The native AMD64 experiment found a reproducible, correctness-preserving improvement that exceeds the project's threshold. Startup warmup is the avoidable cost: using the candidate TEI binary with no warmup reduced median launch-to-first-correct-embedding from 7.616 seconds to 2.104 seconds.
 
-The motivating issue now has a proposed TEI change, [PR #884](https://github.com/huggingface/text-embeddings-inference/pull/884), that makes startup warmup configurable. Its published timing uses launch-to-`/health`; it does not yet establish launch-to-first-correct-embedding across repeated trials or whether skipped initialization moves into the first user request.
+This is a **GO to repeat the change in the intended Spot-instance and container environment**. It is not yet a production-wide claim, and it is not a reason to create another embedding server. The focused TEI change already addresses the bottleneck.
 
-The first comparison should therefore be:
+## Final AMD64 comparison
 
-1. pinned TEI 1.8.0 with `--max-batch-tokens 1024`;
-2. PR #884 with warmup unset, providing a same-binary control;
-3. that identical PR binary with 64-token and zero-token warmup.
+GitHub Actions [run #38189585542](https://github.com/kraftaa/tei-cold-start-experiment/actions/runs/38189585542) ran on native `x86_64` Linux with an AMD EPYC 7763 and four logical CPUs. Each arm used 20 fresh processes and the same cached model revision, host, correctness reference, and request suite.
 
-Only a profile showing a remaining avoidable bottleneck justifies implementation work.
+| Arm | Median first correct | p90 | Passed | Steady p50 | Median throughput |
+|---|---:|---:|---:|---:|---:|
+| Patched TEI 1.8 baseline | 7.993 s | 8.255 s | 20/20 | 33.925 ms | 29.763 req/s |
+| Candidate, default warmup | 7.616 s | 7.951 s | 20/20 | 33.954 ms | 29.682 req/s |
+| Candidate, 64-token warmup | 2.410 s | 2.667 s | 20/20 | 33.716 ms | 29.753 req/s |
+| Candidate, zero warmup | **2.104 s** | **2.414 s** | 20/20 | 33.787 ms | 29.973 req/s |
 
-## Preliminary findings on the development host
+The same-binary comparisons are the clean evidence:
 
-These are diagnostic results from Apple Silicon, not the required comparable x86 benchmark:
+- 64 tokens versus default: **68.36% lower median startup**;
+- zero tokens versus default: **72.37% lower median startup**;
+- all 80 trials passed correctness;
+- p90 improved rather than regressed;
+- steady latency and throughput were effectively unchanged.
 
-- The official TEI 1.8 CPU image is AMD64-only. Under emulation, model-backend creation completed and TEI entered its 1,024-token explicit warmup, but `/health` was still unavailable at the ten-minute timeout.
-- PR #884 at commit `5806bdc99f11ad490cd7e38c1f4dd757034c0adb` built natively with the ORT/HTTP feature set.
-- With `--warmup-tokens 0`, launch-to-first-correct single embedding was 1.506s median and 1.624s p90 across 20 native smoke trials.
-- With `--warmup-tokens 64`, the corresponding measurements were 1.712s median and 1.787s p90.
-- These timings demonstrate that the experiment is runnable and that warmup control reaches useful readiness; they do not establish a speedup over TEI on the reported hardware.
+The zero-warmup result also met the motivating 14-second target with substantial margin on this runner.
 
-### Correctness finding
+## Decision rule assessment
 
-Direct ONNX Runtime inference isolated the problem to the pinned model export: its padded two-item output has cosine similarities of approximately 0.941 and 0.964 against independent single-item inference. TEI compounded this by replacing `--max-batch-requests 1` with the ORT backend maximum of 8.
+The predeclared GO rule required at least 25% lower median time to first correct embedding, no material p90 regression, matching outputs, and no major steady-state regression.
 
-The local TEI patch now treats the backend maximum as a ceiling and honors stricter user limits. Reference capture also constructs batch references from independent single-item inference. With serialized inference enabled:
+| Requirement | Outcome |
+|---|---|
+| Median improvement at least 25% | Pass: 72.37% for zero warmup |
+| No material p90 regression | Pass: 7.951 s to 2.414 s |
+| Correct outputs | Pass: 20/20 for every arm |
+| No major steady-state regression | Pass: latency and throughput were essentially flat |
 
-- zero-token warmup: 20/20 passed, useful-ready median 1.714s and p90 1.789s;
-- 64-token warmup: 20/20 passed, useful-ready median 1.928s and p90 2.039s;
-- zero-token improvement over 64 tokens: approximately 11%, below the 25% GO threshold;
-- zero-token four-request-concurrency throughput: median 23.08 requests/s.
+## Why the conclusion is about warmup
 
-These are valid native ARM candidate measurements, but not a baseline comparison. A compatibility-patched TEI 1.8 ARM build reached health in 5.303s but its first embedding had only 0.9906 cosine similarity to the shared reference, so it was rejected. The pinned official image remains AMD64-only.
+The candidate's default, 64-token, and zero-token configurations used the exact same binary. Only the startup warmup setting changed. The default arm therefore controls for changes in TEI version, compiler, and build. Its startup remained close to the patched TEI 1.8 baseline, while reducing or removing warmup produced the large improvement.
 
-## Known constraints
+Skipping warmup did not merely move several seconds into the first request: the primary measurement ended only after that first response was returned and verified.
 
-- The original issue gives a 14-second requirement, not a 14-second measured baseline.
-- The reporter later described approximately two-minute startup.
-- The referenced model config is not directly accepted by current TEI without removing three duplicate alias fields.
-- The local development machine is ARM64. The pinned official TEI 1.8 CPU image is AMD64-only, so local emulated timings are unsuitable for the primary result.
-- ARM is a valid separate deployment target, but requires a native, output-equivalent baseline. The current TEI 1.8 backport is not output-equivalent enough to qualify.
+## Correctness and model limitation
 
-## GO / NO-GO rule
+Direct ONNX Runtime testing found that the pinned model export is not batch-independent. A padded two-item inference differed from independent single-item inference, and TEI could replace a requested one-item batch limit with the backend maximum of eight.
 
-GO only if a change improves median launch-to-first-correct-embedding by at least 25%, does not materially regress p90, preserves the pinned correctness checks, and has no major steady-state regression. Primary timing statistics exclude any trial that fails the complete correctness suite. Otherwise publish NO-GO with the measurements.
+The benchmark therefore used a recorded TEI patch that treats the backend maximum as a ceiling and honored `--max-batch-requests 1`. It also built batch correctness references from independent requests. This makes the cold-start comparison valid, but serialized batching is a workaround—not the desired production configuration.
+
+Before production use, re-export or fix the ONNX model, restore batching, and repeat both correctness and throughput tests.
+
+## Remaining validation
+
+The final run is strong exploratory evidence, but GitHub-hosted hardware varies and the workflow used native processes rather than the intended production container. The remaining external step is:
+
+1. use the exact target AMD64 Spot instance type and production container;
+2. warm the model cache before timing, as in this experiment;
+3. run at least 20 fresh-process trials for default and the chosen reduced warmup;
+4. keep the same first-correct-embedding gate and steady-state measurements;
+5. report instance type, CPU, image digest, model revision, median, p90, and failures.
+
+If that run preserves the result, use the smallest warmup that meets the deployment's operational preference. Zero tokens was fastest here; 64 tokens was only about 0.31 seconds slower and may be a conservative choice.
+
+## Upstream status
+
+As checked on 2026-10-30, [TEI PR #884](https://github.com/huggingface/text-embeddings-inference/pull/884) and [issue #819](https://github.com/huggingface/text-embeddings-inference/issues/819) were open. The candidate was pinned to commit `5806bdc99f11ad490cd7e38c1f4dd757034c0adb` so future upstream changes cannot silently alter this result.
+
+The complete saved evidence and provenance are under [`results/final-amd64/run-38189585542`](../results/final-amd64/run-38189585542/README.md).

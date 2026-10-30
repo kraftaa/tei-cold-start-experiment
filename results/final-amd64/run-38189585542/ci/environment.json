@@ -1,0 +1,27 @@
+{
+  "captured_at_utc": "2026-10-12T00:55:52Z",
+  "cpu_model_linux": "AMD EPYC 7763 64-Core Processor",
+  "cpu_model_macos": null,
+  "docker_info": {
+    "architecture": "x86_64",
+    "cpus": 4,
+    "memory_bytes": 16766414848,
+    "operating_system": "Ubuntu 24.04.5 LTS",
+    "server_version": "28.0.4"
+  },
+  "kernel": {
+    "release": "6.17.0-1022-azure",
+    "system": "Linux",
+    "version": "#22-Ubuntu SMP Mon Jul 27 17:24:03 UTC 2026"
+  },
+  "logical_cpu_count": 4,
+  "machine": "x86_64",
+  "memory_bytes_macos": null,
+  "platform": "Linux-6.17.0-1022-azure-x86_64-with-glibc2.39",
+  "processor": "x86_64",
+  "thread_environment": {
+    "MKL_NUM_THREADS": null,
+    "OMP_NUM_THREADS": null,
+    "RAYON_NUM_THREADS": null
+  }
+}
